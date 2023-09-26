@@ -10,6 +10,7 @@ function EditUser() {
     Name: "",
     Email: "",
     phone: "",
+    Image: null, // Initialize the Image field as null
   });
 
   useEffect(() => {
@@ -45,6 +46,19 @@ function EditUser() {
       ...user,
       [name]: value,
     });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function () {
+      const imageBase64 = reader.result;
+      setUser({
+        ...user,
+        Image: imageBase64, // Update the Image field with the new image data
+      });
+    };
   };
 
   return (
@@ -92,6 +106,36 @@ function EditUser() {
             className="border border-gray-300 rounded px-4 py-2 w-full"
             required
           />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="image" className="block text-gray-700 font-bold">
+            Image:
+          </label>
+          <input
+            type="file"
+            id="image"
+            name="image"
+            accept="image/*"
+            onChange={handleImageChange} // Handle file selection
+            className="border border-gray-300 rounded px-4 py-2 w-full"
+          />
+          {user.Image && (
+            <img
+              src={user.Image}
+              alt="User's Image"
+              className="mt-2 max-w-full h-auto"
+            />
+          )}
+          <button
+            type="button"
+            onClick={() => {
+              const fileInput = document.getElementById("image");
+              fileInput.click();
+            }}
+            className="mt-2 bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+          >
+            Select Image
+          </button>
         </div>
         <button
           type="submit"
