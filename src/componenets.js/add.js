@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Import axios
+import axios from "axios";
 
 function AddUser() {
   const navigate = useNavigate();
@@ -17,17 +17,14 @@ function AddUser() {
       Name: name,
       Email: email,
       phone: phone,
-      // Include the image data as a Base64 string
       Image: imageFile ? URL.createObjectURL(imageFile) : null,
     };
-
-    // Send newUser to the server, including the image data
 
     axios
       .post("http://localhost:3000/Details", newUser)
       .then((response) => {
         console.log("User added successfully:", response.data);
-        navigate("/"); // Redirect to the home page after adding the user
+        navigate("/");
       })
       .catch((error) => {
         console.error("Error adding user:", error);
@@ -93,13 +90,13 @@ function AddUser() {
             type="file"
             id="image"
             name="image"
-            accept="image/*" // Allow only image files
-            onChange={handleImageChange} // Handle file selection
+            accept="image/*"
+            onChange={handleImageChange}
             className="border border-gray-300 rounded px-4 py-2 w-full"
           />
           {imageFile && (
             <img
-              src={URL.createObjectURL(imageFile)} // Display the selected image
+              src={URL.createObjectURL(imageFile)}
               alt="Selected"
               className="mt-2 max-w-full h-auto"
             />
@@ -107,7 +104,6 @@ function AddUser() {
           <button
             type="button"
             onClick={() => {
-              // Trigger the file input dialog
               const fileInput = document.getElementById("image");
               fileInput.click();
             }}

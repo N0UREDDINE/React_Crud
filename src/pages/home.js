@@ -1,81 +1,58 @@
 import axios from "axios";
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-//import Details from "../componenets.js/details";
 
-function Home(){
-    const [users,setUsers]=useState([]);
+function Home() {
+  const [users, setUsers] = useState([]);
 
-    function loadUsers(){
-        axios.get("http://localhost:3000/Details")
-        .then((res)=>{
-            setUsers(res.data.reverse());
-        })
-    };    
+  function loadUsers() {
+    axios.get("http://localhost:3000/Details")
+      .then((res) => {
+        setUsers(res.data.reverse());
+      });
+  }
 
+  useEffect(() => {
+    loadUsers();
+  }, []);
 
-    useEffect(()=>{
-        loadUsers();
-    },[]);
+  function deleteUser(id) {
+    axios.delete(`http://localhost:3000/Details/${id}`).then(loadUsers());
+  }
 
-    function deleteUser(id) {
-        axios.delete(`http://localhost:3000/Details/${id}`).then(loadUsers());
-      }
-    
-      return (
-        <>
-        <div className="w-[100vw] h-full justify-center items-center flex flex-col px-10 py-8 mt-8">
-          <h1 className="text-3xl font-bold">DATA TABLE</h1>
-          <div className="flex flex-col">
-          <div className="overflow-x-auto mt-8 sm:-mx-6 lg:-mx-8">
-            <div className="py-4 inline-block min-w-full sm:px-6 lg:px-8">
-            <div className="overflow-hidden">
-                <table className="min-w-full text-center">
-                <thead className="border-b bg-gray-800">
-                    <tr>
-                    <th scope="col" className="text-sm font-medium text-white px-6 py-4">
-                        ID
-                    </th>
-                    <th scope="col" className="text-sm font-lg text-white px-6 py-4">
-                        Name
-                    </th>
-                    <th scope="col" className="text-sm font-lg text-white px-6 py-4">
-                        Email
-                    </th>
-                    <th scope="col" className="text-sm font-lg text-white px-6 py-4">
-                        Phone
-                    </th>
-                    <th scope="col" className="text-sm font-lg text-white px-6 py-4">
-                        Action
-                    </th>
-                    </tr>
-                </thead>
-        
-                <tbody className="border-black border-2">
-                    {users.map((data, index) => (
-                        <tr key={index} className="bg-white border-b-2 border-black">
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{index + 1}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{data.Name}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"> {data.Email} </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"> {data.phone}</td>
-                            <td className="text-sm flex justify-between items-center text-gray-900 font-bold px-6 py-4 space-x-4 whitespace-no">
-                            <Link to={`/user/${data.id}`} className="bg-teal-600 text-white px-6 py-2 rounded-lg">View</Link>
+  return (
+    <div className="w-full h-screen p-8">
+      <h1 className="text-3xl font-bold mb-4">User Data Table</h1>
+      <div className="overflow-x-auto">
+        <table className="min-w-full border-collapse border border-gray-300">
+          <thead>
+            <tr>
+              <th className="text-left px-4 py-2 bg-gray-200">ID</th>
+              <th className="text-left px-4 py-2 bg-gray-200">Name</th>
+              <th className="text-left px-4 py-2 bg-gray-200">Email</th>
+              <th className="text-left px-4 py-2 bg-gray-200">Phone</th>
+              <th className="text-left px-4 py-2 bg-gray-200">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((data, index) => (
+              <tr key={index}>
+                <td className="border px-4 py-2">{index + 1}</td>
+                <td className="border px-4 py-2">{data.Name}</td>
+                <td className="border px-4 py-2">{data.Email}</td>
+                <td className="border px-4 py-2">{data.phone}</td>
+                <td className="border px-4 py-2">
+                  <Link to={`/user/${data.id}`} className="bg-blue-500 text-white px-2 py-1 rounded-lg mr-2">View</Link>
+                  <Link to={`/edit-user/${data.id}`} className="bg-green-500 text-white px-2 py-1 rounded-lg mr-2">Edit</Link>
+                  <button onClick={() => deleteUser(data.id)} className="bg-red-500 text-white px-2 py-1 rounded-lg">Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
 
-                                <Link to={`/edit-user/${data.id}`} className="bg-blue-600 text-white px-6 py-2 rounded-lg"> Edit </Link>
-                                <Link onClick={()=>deleteUser(data.id)} to={"/"} className="bg-red-600 text-white px-6 py-2 rounded-lg"> Delete </Link>
-                                
-                            </td>
-    
-                        </tr>
-                    ))}
-                </tbody>
-                </table>
-            </div>
-            </div>
-          </div>
-          </div>
-        </div>
-        </>
-      );
-    }
-    export default Home;
+export default Home;
